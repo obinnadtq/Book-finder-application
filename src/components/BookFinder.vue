@@ -7,6 +7,12 @@
       </p>
       <button class="btn">Submit</button>
     </form>
+    <div v-for="(book, index) in books" :key="index">
+      <p>Title : {{book.volumeInfo.title}} </p>
+      <label>Authors:<p v-for="(author, index) in book.volumeInfo.authors" :key="index">{{author}}</p></label>
+      <img :src="book.volumeInfo.imageLinks.smallThumbnail"><br>
+      <a :href="book.volumeInfo.previewLink" target="_blank">Preview Book</a>
+    </div>
   </div>
 </template>
 
@@ -17,10 +23,6 @@ export default {
   data() {
     return {
       books: {},
-      title: "",
-      authors: "",
-      image: "",
-      url: "",
       search: ""
     };
   },
@@ -32,10 +34,11 @@ export default {
         axios
           .get("https://www.googleapis.com/books/v1/volumes?q=" + this.search)
           .then(response => {
-            console.log(response.data.items)
+            this.books = response.data.items;
           });
       }
-      this.search = ''
+      this.search = "";
+      this.books = {};
     }
   }
 };
